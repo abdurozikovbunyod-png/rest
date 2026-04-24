@@ -1,0 +1,68 @@
+package com.example.restaurant_rating.runner;
+
+import com.example.restaurant_rating.entity.CuisineType;
+import com.example.restaurant_rating.entity.Restaurant;
+import com.example.restaurant_rating.entity.Review;
+import com.example.restaurant_rating.entity.Visitor;
+import com.example.restaurant_rating.service.RestaurantService;
+import com.example.restaurant_rating.service.ReviewService;
+import com.example.restaurant_rating.service.VisitorService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+
+@Component
+@RequiredArgsConstructor
+public class AppRunner implements CommandLineRunner {
+
+    private final VisitorService visitorService;
+    private final RestaurantService restaurantService;
+    private final ReviewService reviewService;
+
+    @Override
+    public void run(String... args) {
+
+        Visitor visitor1 = new Visitor(1L, "Али", 20, "Мужской");
+        Visitor visitor2 = new Visitor(2L, null, 22, "Женский");
+
+        visitorService.save(visitor1);
+        visitorService.save(visitor2);
+
+        Restaurant restaurant1 = new Restaurant(
+                1L,
+                "Tasty Food",
+                "Хороший ресторан в центре города",
+                CuisineType.ITALIAN,
+                BigDecimal.valueOf(1500),
+                BigDecimal.ZERO
+        );
+
+        Restaurant restaurant2 = new Restaurant(
+                2L,
+                "China House",
+                "",
+                CuisineType.CHINESE,
+                BigDecimal.valueOf(1200),
+                BigDecimal.ZERO
+        );
+
+        restaurantService.save(restaurant1);
+        restaurantService.save(restaurant2);
+
+        reviewService.save(new Review(1L, 1L, 5, "Очень вкусно"));
+        reviewService.save(new Review(2L, 1L, 4, ""));
+
+        reviewService.save(new Review(1L, 2L, 3, "Нормально"));
+
+        System.out.println("Посетители:");
+        visitorService.findAll().forEach(System.out::println);
+
+        System.out.println("Рестораны:");
+        restaurantService.findAll().forEach(System.out::println);
+
+        System.out.println("Отзывы:");
+        reviewService.findAll().forEach(System.out::println);
+    }
+}
